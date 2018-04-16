@@ -1,0 +1,107 @@
+import pygame
+import random
+
+# Define some colors
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
+GREEN = (0, 255, 0)
+RED = (255, 0, 0)
+
+# This sets the WIDTH and HEIGHT of each grid location
+WIDTH = 80
+HEIGHT = 80
+
+# This sets the margin between each cell
+MARGIN = 10
+
+# Create a 2 dimensional array. A two dimensional
+# array is simply a list of lists.
+grid = []
+
+
+class Slider(pygame.sprite.Sprite):
+    def __init__(self):
+        for row in range(4):
+            color = RED
+            for column in range(2):
+                pygame.draw.rect(screen,
+                                 color,
+                                 [(MARGIN + WIDTH) * column + MARGIN,
+                                  (MARGIN + HEIGHT) * row + MARGIN,
+                                  WIDTH,
+                                  HEIGHT])  # Append a cell
+            self.rect = self.image.get_rect()
+
+    def up(self):
+        self.change_y = 6
+
+    def down(self):
+        self.change_y = -6
+
+    def left(self):
+        self.change_x = -6
+
+    def right(self):
+        self.change_x = 6
+
+    def stop(self):
+        self.change_x = 0
+
+
+# Initialize pygame
+pygame.init()
+
+# Set the HEIGHT and WIDTH of the screen
+WINDOW_SIZE = [375, 375]
+screen = pygame.display.set_mode(WINDOW_SIZE)
+
+# Set title of screen
+pygame.display.set_caption("2048 Clone")
+
+# Loop until the user clicks the close button.
+done = False
+
+# Used to manage how fast the screen updates
+clock = pygame.time.Clock()
+
+# -------- Main Program Loop -----------
+while not done:
+    for event in pygame.event.get():  # User did something
+        if event.type == pygame.QUIT:  # If user clicked close
+            done = True  # Flag that we are done so we exit this loo
+
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT:
+                Slider.change_x = -6
+            if event.key == pygame.K_RIGHT:
+                Slider.change_x = 6
+            if event.key == pygame.K_UP:
+                Slider.up = Slider.change_y = 6
+            if event.key == pygame.K_DOWN:
+                Slider.down = Slider.change_y = -6
+
+        if event.type == pygame.KEYUP:
+            if event.key == pygame.K_LEFT and Slider.change_x < 0:
+                Slider.stop
+            if event.key == pygame.K_RIGHT and Slider.change_x > 0:
+                Slider.stop
+            if event.key == pygame.K_UP and Slider.change_x > 0:
+                Slider.stop
+            if event.key == pygame.K_DOWN and Slider.change_x > 0:
+                Slider.stop
+
+    # Set the screen background
+    screen.fill(BLACK)
+
+    # Draw the grid
+
+
+    # Limit to 60 frames per second
+    clock.tick(60)
+
+    # Go ahead and update the screen with what we've drawn.
+    pygame.display.flip()
+
+# Be IDLE friendly. If you forget this line, the program will 'hang'
+# on exit.
+pygame.quit()
